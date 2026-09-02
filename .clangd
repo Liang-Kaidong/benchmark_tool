@@ -1,0 +1,15 @@
+CompileFlags:
+  Add:
+    # C++ 标准
+    - -std=c++17
+
+    # GCC 11 C++ 标准库
+    - -isystem
+    - /usr/include/c++/11
+    - -isystem
+    - /usr/include/aarch64-linux-gnu/c++/11
+    - -isystem
+    - /usr/include/c++/11/backward
+
+    # 项目头文件
+    - -I/home/sunrise/Documents/kaydon/benchmark_tool/include
