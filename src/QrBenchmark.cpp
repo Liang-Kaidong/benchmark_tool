@@ -503,9 +503,18 @@ void QrBenchmark::batchRunAllGroups(QrTaskType task)
 
     if (fs::exists(taskBenchRoot)) {
         for (const auto& entry : fs::directory_iterator(taskBenchRoot)) {
-            if (entry.is_directory()) {
-                groupPaths.push_back(entry.path());
+            if (!entry.is_directory()) {
+                continue;
             }
+
+            const std::string directoryName =
+                entry.path().filename().string();
+
+            if (directoryName == "report_output") {
+                continue;
+            }
+
+            groupPaths.push_back(entry.path());
         }
     }
 
@@ -675,9 +684,18 @@ void QrBenchmark::runSingleGroupDebug(QrTaskType task)
 
     if (fs::exists(taskBenchRoot)) {
         for (const auto& entry : fs::directory_iterator(taskBenchRoot)) {
-            if (entry.is_directory()) {
-                groupPaths.push_back(entry.path());
+            if (!entry.is_directory()) {
+                continue;
             }
+
+            const std::string directoryName =
+                entry.path().filename().string();
+
+            if (directoryName == "report_output") {
+                continue;
+            }
+
+            groupPaths.push_back(entry.path());
         }
     }
 
