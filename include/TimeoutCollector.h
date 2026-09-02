@@ -59,11 +59,11 @@ inline TimeoutResult collect(const fs::path& resultGridDir)
 
             const double totalMs = std::stod(totalMatch[1].str());
             if (totalMs > kTimeoutThresholdMs) {
-                TimeoutSample sample;
-                sample.imageName = imageMatch[1].str();
-                sample.resultTxtPath = entry.path();
-                sample.totalMs = totalMs;
-                result.timeoutSamples.push_back(sample);
+                result.timeoutSamples.push_back({
+                    imageMatch[1].str(),
+                    entry.path(),
+                    totalMs
+                });
             }
         }
     }
@@ -85,15 +85,14 @@ inline void saveTimeoutSamples(
         return;
     }
 
-    summary << "group=" << groupName << "\n";
-    summary << "timeout_threshold_ms=" << kTimeoutThresholdMs << "\n";
-    summary << "total_time_log_count=" << timeoutResult.totalCount << "\n";
+    summary << "group=" << groupName << '\n';
+    summary << "timeout_threshold_ms=" << kTimeoutThresholdMs << '\n';
+    summary << "total_time_log_count=" << timeoutResult.totalCount << '\n';
     summary << "timeout_count=" << timeoutResult.timeoutSamples.size() << "\n\n";
 
     for (const auto& sample : timeoutResult.timeoutSamples) {
         const fs::path sourceImagePath = sourceImageDir / sample.imageName;
 
-        // 每个超时样本独立保存对应 txt，避免同一 txt 被不同图片覆盖。
         const std::string uniquePrefix =
             groupName + "_" + fs::path(sample.imageName).stem().string();
 
@@ -113,12 +112,12 @@ inline void saveTimeoutSamples(
             if (ec) {
                 summary << "[WARN] copy image failed: "
                         << sourceImagePath.string()
-                        << ", error=" << ec.message() << "\n";
+                        << ", error=" << ec.message() << '\n';
                 ec.clear();
             }
         } else {
             summary << "[WARN] source image not found: "
-                    << sourceImagePath.string() << "\n";
+                    << sourceImagePath.string() << '\n';
         }
 
         if (fs::exists(sample.resultTxtPath, ec)) {
@@ -131,19 +130,19 @@ inline void saveTimeoutSamples(
             if (ec) {
                 summary << "[WARN] copy txt failed: "
                         << sample.resultTxtPath.string()
-                        << ", error=" << ec.message() << "\n";
+                        << ", error=" << ec.message() << '\n';
                 ec.clear();
             }
         } else {
             summary << "[WARN] result txt not found: "
-                    << sample.resultTxtPath.string() << "\n";
+                    << sample.resultTxtPath.string() << '\n';
         }
 
         summary << "image=" << sample.imageName
                 << ", total_ms=" << std::fixed << std::setprecision(2)
                 << sample.totalMs
                 << ", result_txt=" << sample.resultTxtPath.filename().string()
-                << "\n";
+                << '\n';
     }
 }
 

@@ -1,6 +1,33 @@
 ============================================================
 Update Log  benchmark_tool
 ============================================================
+[2026-09-02]
+1. 新增单帧推理超时统计与归档：
+   - 解析 results/grid/*.txt 中的时间日志。
+   - 每条包含 [image=...] 且 total=...ms 的记录均参与统计。
+   - 判定规则：total > 200ms 记为超时；total == 200ms 不记为超时。
+   - 每个 group 运行后输出总时间记录数和超时数量。
+
+2. 新增 TimeoutCollector.h 公共超时收集模块：
+   - QR Benchmark 与 Dirty Benchmark 共用同一套超时解析和归档逻辑。
+   - 避免两套测试逻辑重复维护。
+
+3. 超时样本自动保存：
+   - 保存原始超时图片。
+   - 保存该图片对应的 result txt。
+   - 生成超时明细汇总 txt。
+   - 保存路径：
+     <group>/results/timeout_samples/
+
+4. 已接入测试项：
+   - Charger-QR 基准测试。
+   - Area-QR 基准测试。
+   - Dirty-Benchmark 脏污批量测试。
+   - 单组调试与批量测试均生效。
+
+5. 代码格式统一：
+   - 统一 include 排列、缩进、花括号、空行和长函数换行风格。
+
 [2026‑08‑31]
 1. QR基准测试目录结构重构：
    - 废弃旧 /userdata/benchmark/qr_benchmark
