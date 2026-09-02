@@ -28,6 +28,9 @@ Update Log  benchmark_tool
 5. 代码格式统一：
    - 统一 include 排列、缩进、花括号、空行和长函数换行风格。
 
+6. 问题修复：
+   - 修复推理路径异常包含报告目录的问题
+
 [2026‑08‑31]
 1. QR基准测试目录结构重构：
    - 废弃旧 /userdata/benchmark/qr_benchmark
